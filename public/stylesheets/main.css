@@ -1,0 +1,65 @@
+/*
+ * Main section
+ */
+
+ @media(min-width:768px) {
+
+#user_location{
+    width: 250px;
+}
+
+#user_term{
+    width: 250px;
+  }
+}
+
+#main{
+  text-align: center;
+  color: #fff;
+  background-image: url(../images/coffeebeans.jpg);
+  background-attachment: scroll;
+  background-position: center center;
+  background-repeat: none;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+}
+
+#ajaxform{
+  padding-top: 50px;
+}
+
+#main .mainText{
+  padding-top: 300px;
+  padding-bottom: 100px;
+}
+
+#main .mainText .mainSubheading{
+  font-family: 'Cabin', Georgia, Times, serif;
+  font-size: 20px;
+}
+
+#main .mainText .mainHeading{
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  font-family: 'Cabin', Georgia, Times, serif;
+  font-size: 50px;
+  font-weight: 700;
+  line-height: 50px;
+}
+
+.input-group{
+  padding: 0px 5px 0px 5px;
+}
+
+.pagination-centered {
+  text-align: center;
+}
+
+#map-canvas {
+        height: 300px;
+        margin: 0px;
+        padding: 0px
+}
+

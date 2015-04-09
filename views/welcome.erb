@@ -1,0 +1,92 @@
+<!-- Main Page (in embeddable Ruby format) -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+  <title>coffee & donuts!</title>
+
+  <!-- Main CSS file -->
+  <link rel="stylesheet" type="text/css" href="/stylesheets/main.css" />
+
+  <!-- Bootstrap core CSS -->
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Maps API V3 -->
+  <script src="http://maps.google.com/maps/api/js?sensor=true" type="text/javascript"></script>
+
+  <!-- Google Fonts -->
+  <link href='http://fonts.googleapis.com/css?family=Cabin:400,700' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+
+  <!-- Font Awesome -->
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+</head>
+<body>
+
+  <!-- Main -->
+  <section id="main">
+    <div class="container">
+      <div class="mainText">
+        <div class="mainHeading">Making a Good Impression
+        </div>
+        <div class="mainSubheading">Let's find some coffee and donuts on your route!</div>
+        <form class="form-inline" action="/" method="get" id="ajaxform">
+          <label for="exampleInputEmail1">YOUR CURRENT LOCATION</label>
+          <div class="input-group">
+            <input type="text" class="form-control" id="user_location" name="user_location" placeholder="e.g. 111 Market Street" aria-describedby="sizing-addon2" >
+            <span class="input-group-addon btn" id="sizing-addon2" onclick="getLocation()">
+              <i class="fa fa-location-arrow"></i>
+              <img src="/images/ajax-loader.gif" id="loading-indicator1" style="display:none" />
+            </span>
+          </div>
+          <label for="exampleInputEmail1">WHERE YOU'RE GOING</label>
+          <div class="input-group">
+            <input type="text" class="form-control" id="user_term" name="user_term" placeholder="282 2nd Street 4th floor, San Francisco, CA 94105" aria-describedby="sizing-addon2" >
+            <span class="input-group-btn">
+              <img src="/images/ajax-loader.gif" id="loading-indicator2" style="display:none" />
+              <button class="btn btn-default btn-primary" type="submit" id="search_yelp">
+                <i class="fa fa-search"></i>
+              </button>
+            </span>
+          </div>
+          <div class="alert alert-warning collapse" role="alert" id="error_user_location">
+            <span>
+              <p>Please enter a location, or choose the Location Arrow button to allow your location to be determined.</p>
+            </span>
+          </div>
+          <div class="alert alert-warning collapse" role="alert" id="error_user_term">
+            <span>
+              <p>Please enter a search term.</p>
+            </span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section id="map">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6" id="map-canvas"></div>
+      </div>
+    </div>
+  </section>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="javascripts/main.js"></script>
+
+  </body>
+  </html>
