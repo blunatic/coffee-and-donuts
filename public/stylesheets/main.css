@@ -4,11 +4,11 @@
 
  @media(min-width:768px) {
 
-#user_location{
+  #user_location{
     width: 250px;
-}
+  }
 
-#user_term{
+  #user_term{
     width: 250px;
   }
 }
@@ -26,8 +26,9 @@
   -o-background-size: cover;
 }
 
-#ajaxform{
+#user-input{
   padding-top: 50px;
+  padding-bottom: 25px;
 }
 
 #main .mainText{
@@ -58,8 +59,13 @@
 }
 
 #map-canvas {
-        height: 300px;
-        margin: 0px;
-        padding: 0px
+  height: 500px;
+  margin: 0px;
+  padding: 0px
+}
+
+#map-directions {
+  height: 300px
+  overflow: auto;
 }
 

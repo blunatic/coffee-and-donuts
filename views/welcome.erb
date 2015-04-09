@@ -38,10 +38,10 @@
         <div class="mainHeading">Making a Good Impression
         </div>
         <div class="mainSubheading">Let's find some coffee and donuts on your route!</div>
-        <form class="form-inline" action="/" method="get" id="ajaxform">
+        <div class="form-inline" id="user-input">
           <label for="exampleInputEmail1">YOUR CURRENT LOCATION</label>
           <div class="input-group">
-            <input type="text" class="form-control" id="user_location" name="user_location" placeholder="e.g. 111 Market Street" aria-describedby="sizing-addon2" >
+            <input type="text" class="form-control" id="user_start" name="user_start" placeholder="e.g. 111 Market Street" aria-describedby="sizing-addon2" >
             <span class="input-group-addon btn" id="sizing-addon2" onclick="getLocation()">
               <i class="fa fa-location-arrow"></i>
               <img src="/images/ajax-loader.gif" id="loading-indicator1" style="display:none" />
@@ -49,14 +49,21 @@
           </div>
           <label for="exampleInputEmail1">WHERE YOU'RE GOING</label>
           <div class="input-group">
-            <input type="text" class="form-control" id="user_term" name="user_term" placeholder="282 2nd Street 4th floor, San Francisco, CA 94105" aria-describedby="sizing-addon2" >
-            <span class="input-group-btn">
+            <input type="text" class="form-control" id="user_destination" name="user_destination" placeholder="282 2nd Street 4th floor, San Francisco, CA 94105" aria-describedby="sizing-addon2">
+            <span class="input-group-btn" onclick="calcRoute()">
               <img src="/images/ajax-loader.gif" id="loading-indicator2" style="display:none" />
-              <button class="btn btn-default btn-primary" type="submit" id="search_yelp">
+              <button class="btn btn-default btn-primary" id="search_location">
                 <i class="fa fa-search"></i>
               </button>
             </span>
           </div>
+        </div>
+          <select id="travelmode" onchange="calcRoute();">
+            <option value="DRIVING" selected="selected" data-shortMode="c">DRIVING</option>
+            <option value="TRANSIT" data-shortMode="r" selected>TRANSIT</option>
+            <option value="WALKING" data-shortMode="w">WALKING</option>
+            <option value="BICYCLING" data-shortMode="b">BICYCLING</option>
+          </select>
           <div class="alert alert-warning collapse" role="alert" id="error_user_location">
             <span>
               <p>Please enter a location, or choose the Location Arrow button to allow your location to be determined.</p>
@@ -67,7 +74,6 @@
               <p>Please enter a search term.</p>
             </span>
           </div>
-        </form>
       </div>
     </div>
   </section>
@@ -76,6 +82,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-6" id="map-canvas"></div>
+        <div class="col-md-6" id="map-directions"></div>
       </div>
     </div>
   </section>
