@@ -4,14 +4,7 @@
 # handle routes
 
 require 'sinatra'
-require 'sinatra/reloader' if development?
 
-set :public_folder => "public", :static => true
-
-class CoffeeAndDonuts < Sinatra::Base
-
-end
-
-get "/" do
+get '/' do
     erb :welcome
 end
