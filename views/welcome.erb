@@ -1,6 +1,7 @@
 <!-- Main Page (in embeddable Ruby format) -->
 
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -19,7 +20,7 @@
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- Google Maps API V3 -->
-  <script src="http://maps.google.com/maps/api/js?sensor=true" type="text/javascript"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places" type="text/javascript"></script>
 
   <!-- Google Fonts -->
   <link href='http://fonts.googleapis.com/css?family=Cabin:400,700' rel='stylesheet' type='text/css'>
@@ -39,53 +40,78 @@
         </div>
         <div class="mainSubheading">Let's find some coffee and donuts on your route!</div>
         <div class="form-inline" id="user-input">
-          <label for="exampleInputEmail1">YOUR CURRENT LOCATION</label>
           <div class="input-group">
-            <input type="text" class="form-control" id="user_start" name="user_start" placeholder="e.g. 111 Market Street" aria-describedby="sizing-addon2" >
-            <span class="input-group-addon btn" id="sizing-addon2" onclick="getLocation()">
+            <input type="text" class="form-control" id="user_start" name="user_start" placeholder="Where are you?" aria-describedby="sizing-addon2" >
+            <span class="input-group-addon btn" id="start_button" onclick="getLocation()">
               <i class="fa fa-location-arrow"></i>
               <img src="/images/ajax-loader.gif" id="loading-indicator1" style="display:none" />
             </span>
           </div>
-          <label for="exampleInputEmail1">WHERE YOU'RE GOING</label>
           <div class="input-group">
-            <input type="text" class="form-control" id="user_destination" name="user_destination" placeholder="282 2nd Street 4th floor, San Francisco, CA 94105" aria-describedby="sizing-addon2">
-            <span class="input-group-btn" onclick="calcRoute()">
+            <input type="text" class="form-control" id="user_destination" name="user_destination" placeholder="Where's your destination?" aria-describedby="sizing-addon2">
+            <span class="input-group-addon btn" id="destination_button" onclick="calcRoute()">
+              <i class="fa fa-search"></i>
               <img src="/images/ajax-loader.gif" id="loading-indicator2" style="display:none" />
-              <button class="btn btn-default btn-primary" id="search_location">
-                <i class="fa fa-search"></i>
-              </button>
             </span>
           </div>
         </div>
-          <select id="travelmode" onchange="calcRoute();">
-            <option value="DRIVING" selected="selected" data-shortMode="c">DRIVING</option>
-            <option value="TRANSIT" data-shortMode="r" selected>TRANSIT</option>
-            <option value="WALKING" data-shortMode="w">WALKING</option>
-            <option value="BICYCLING" data-shortMode="b">BICYCLING</option>
-          </select>
-          <div class="alert alert-warning collapse" role="alert" id="error_user_location">
-            <span>
-              <p>Please enter a location, or choose the Location Arrow button to allow your location to be determined.</p>
-            </span>
+        <label id="travel-mode-label">Mode of Travel</label>
+        <select id="travelmode" class="btn btn-default dropdown-toggle" data-toggle="dropdown" onchange="calcRoute();">
+          <option value="TRANSIT">Transit</option>
+          <option value="DRIVING">Driving</option>
+          <option value="WALKING" >Walking</option>
+          <option value="BICYCLING" >Bicycling</option>
+        </select>
+        <div class="alert alert-warning collapse" role="alert" id="error_user_location">
+          <span>
+            <p>Please enter a location, or choose the Location Arrow button to allow your location to be determined.</p>
+          </span>
+        </div>
+        <div class="alert alert-warning collapse" role="alert" id="error_user_term">
+          <span>
+            <p>Please enter a search term.</p>
+          </span>
+        </div>
+
+        <!-- Coffee and Donuts image -->
+        <img src="/images/coffee_and_donuts.svg"/>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Map and Directions Display -->
+  <section id="map">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12" id="map-canvas"></div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12" id="map-directions">
+          <h1 id="donut_heading" style="display:none;"> Closest Donuts & Coffee Shop: </h1>
+          <div id="donut_location">
           </div>
-          <div class="alert alert-warning collapse" role="alert" id="error_user_term">
-            <span>
-              <p>Please enter a search term.</p>
-            </span>
-          </div>
+          <div id="map-directions1"></div>
+          <div id="map-directions2"></div>
+        </div>
       </div>
     </div>
   </section>
 
-  <section id="map">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-6" id="map-canvas"></div>
-        <div class="col-md-6" id="map-directions"></div>
-      </div>
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-text">
+      <p>© coffee & donuts - brendan luna</p>
+      <ul>
+        <li><a href="https://github.com/blunatic/coffee-and-donuts" target="_blank">github</a></li>
+        <li><a href="https://www.linkedin.com/in/brendanluna" target="_blank">linkedin</a></li>
+        <li></li>
+      </ul>
     </div>
-  </section>
+  </footer>
 
 
     <!-- Bootstrap core JavaScript

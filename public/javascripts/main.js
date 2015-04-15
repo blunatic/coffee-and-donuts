@@ -5,70 +5,182 @@
  * Google Maps Map Initialization
  */
 
-var directionsDisplay;
-var directionsService = new google.maps.DirectionsService();
-var map;
+ var directionsDisplay1, directionsDisplay2;
+ var directionsService = new google.maps.DirectionsService();
+ var map;
 
-function initialize() {
-	directionsDisplay = new google.maps.DirectionsRenderer();
-	var sf = new google.maps.LatLng(37.775, -122.419);
-	var mapOptions = {
-		zoom: 12,
-		center: sf,
-		scrollwheel: false
-	};
-	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-	directionsDisplay.setMap(map);
-	directionsDisplay.setPanel(document.getElementById('map-directions'));
-}
+ function initialize() {
+ 	// leg1 directions display (origin to donut shop)
+ 	directionsDisplay1 = new google.maps.DirectionsRenderer({
+                                          map             : map,
+                                          preserveViewport: true,
+                                          polylineOptions : {strokeColor:
+                                                              'red'}});
+ 	// leg2 directions display (donut shop to destination)
+ 	directionsDisplay2 = new google.maps.DirectionsRenderer({
+                                          map             : map,
+                                          preserveViewport: true,
+                                          polylineOptions : {strokeColor:
+                                                              'blue'}});
+
+ 	// default starting map (San Francisco)
+ 	var sf = new google.maps.LatLng(37.775, -122.419);
+ 	var mapOptions = {
+ 		zoom: 12,
+ 		center: sf,
+ 		scrollwheel: false
+ 	};
+ 	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+ 	// set map and direction panel elements
+ 	directionsDisplay1.setMap(map);
+ 	directionsDisplay2.setMap(map);
+ 	directionsDisplay1.setPanel(document.getElementById('map-directions1'));
+ 	directionsDisplay2.setPanel(document.getElementById('map-directions2'));
+
+ }
+
+ // Handle "enter" submit for user destination search
+$("#user_destination").keyup(function(event){
+    if(event.keyCode == 13){
+        $("#destination_button").click();
+    }
+});
 
 /*
  * Google Maps Location
  */
 
-function getLocation() {
-	$('#loading-indicator1').show();
+ function getLocation() {
+ 	$('#loading-indicator1').show();
 
-	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(showPosition);
-	} else {
-		console.log("Geolocation is not supported by this browser.");
-	}
-}
+ 	if (navigator.geolocation) {
+ 		navigator.geolocation.getCurrentPosition(showPosition);
+ 	} else {
+ 		console.log("Geolocation is not supported by this browser.");
+ 	}
+ }
 
-function showPosition(position) {
-	var locCurrent = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-	var geocoder = new google.maps.Geocoder();
-	geocoder.geocode({
-		'latLng': locCurrent
-	}, function(results, status) {
-		console.log(results);
-		var locCountryNameCount = 0;
-		var locCountryName = results[locCountryNameCount].formatted_address;
-		$("#user_start").val(locCountryName);
-		$('#loading-indicator1').hide();
-	});
-}
+ function showPosition(position) {
+ 	var locCurrent = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+ 	var geocoder = new google.maps.Geocoder();
+ 	geocoder.geocode({
+ 		'latLng': locCurrent
+ 	}, function(results, status) {
+ 		var locCountryNameCount = 0;
+ 		var locCountryName = results[locCountryNameCount].formatted_address;
+ 		$("#user_start").val(locCountryName);
+ 		$('#loading-indicator1').hide();
+ 	});
+ }
 
 /*
 * Google Maps Calculate Route
 */
 
 function calcRoute() {
-  var start = $('#user_start').val();
-  var end = $('#user_destination').val();
-  var selectedMode = $('#travelmode').val();
-  console.log(start);
-  var request = {
-    origin: start,
-    destination: end,
-    travelMode: google.maps.TravelMode[selectedMode]
-  };
-  directionsService.route(request, function(response, status) {
-    if (status == google.maps.DirectionsStatus.OK) {
-      directionsDisplay.setDirections(response);
-    }
-  });
+	// get user origin, destination and travel mode
+	var start = $('#user_start').val();
+	var end = $('#user_destination').val();
+	var selectedMode = $('#travelmode').val();
+
+	// show loading icon
+	$('#loading-indicator2').show();
+
+	// empty previous results
+	$('#donut_location').empty();
+
+	// codeAddress grabs the lat/lng for the user destination
+	// so that nearby search can be done for donuts and coffee
+	codeAddress(end, function(geocodeData) {
+
+		// search request
+		var coffeeDonutRequest = {
+			location: geocodeData,
+			types: ['food'],
+			rankBy: google.maps.places.RankBy.DISTANCE,
+			keyword: 'donuts'
+		};
+
+		var service = new google.maps.places.PlacesService(map);
+
+		// search nearby the end destination for nearest donuts (which assumes they'll also have coffee)
+		service.nearbySearch(coffeeDonutRequest, function callback(results, status) {
+			console.log(results);
+			//display nearest donut shop location found
+			$('#donut_heading').show();
+			var rating = results[0].rating;
+
+			if(rating == undefined){
+				rating = "No Rating";
+			}
+
+			$('#donut_location').append("<h3>" + results[0].name + "</h3><h2><small>" + results[0].vicinity
+			 + " | Rating: " + rating + "</small></h2>");
+
+			// hide loading icon
+			$('#loading-indicator2').hide();
+
+			// scroll to directions and results
+			$("html, body").animate({
+                    scrollTop: $('#map').offset().top 
+                }, 2000);
+
+			// leg1 directions (origin to donut shop)
+			var leg1 = {
+				origin: start,
+				destination: results[0].geometry.location,
+				travelMode: google.maps.TravelMode[selectedMode]
+			};
+
+			directionsService.route(leg1, function(response, status) {
+				if (status == google.maps.DirectionsStatus.OK) {
+					console.log(response);
+					map.setZoom(13);
+					response.routes[0].legs[0].end_address = results[0].name + ", " + results[0].vicinity;
+					directionsDisplay1.setDirections(response);
+				}
+			});
+
+			// leg2 directions (donut shop to destination)
+			var leg2 = {
+				origin: results[0].geometry.location,
+				destination: end,
+				travelMode: google.maps.TravelMode[selectedMode]
+			};
+
+			directionsService.route(leg2, function(response, status) {
+				if (status == google.maps.DirectionsStatus.OK) {
+					console.log(response);
+					map.setZoom(13);
+					response.routes[0].legs[0].start_address = results[0].name + ", " + results[0].vicinity;
+					directionsDisplay2.setDirections(response);
+				}
+			});
+		});
+	});
+
+}
+
+/*
+* Get the lat/lng of an address using Google Maps API geocoder
+*/
+function codeAddress(endAddress, callback) {
+	var geocoder = new google.maps.Geocoder();
+	geocoder.geocode( { 'address': endAddress}, function(results, status) {
+		if (status == google.maps.GeocoderStatus.OK) {
+			console.log(results);
+			var currentlatlng = results[0].geometry.location;
+			var lng = currentlatlng.lng();
+			var lat = currentlatlng.lat();
+			var here = new google.maps.LatLng(lat, lng);
+			callback(here);
+		} else {
+			alert('Geocode was not successful for the following reason: ' + status);
+			callback(null);
+			$('#loading-indicator2').hide();
+		}
+	});
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);

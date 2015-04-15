@@ -4,19 +4,36 @@
 
  @media(min-width:768px) {
 
-  #user_location{
-    width: 250px;
+  #user_start{
+    width: 400px;
   }
 
-  #user_term{
-    width: 250px;
+  #user_destination{
+    width: 400px;
   }
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Cabin', Georgia, Times, serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+
+body{
+  font-family: 'PT Sans', Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 25px;
+}
+
+/*
+* Main Header
+*/
+
 #main{
   text-align: center;
-  color: #fff;
-  background-image: url(../images/coffeebeans.jpg);
+  color: #FFF;
+  background-color: #0EB5E2;
   background-attachment: scroll;
   background-position: center center;
   background-repeat: none;
@@ -26,14 +43,10 @@
   -o-background-size: cover;
 }
 
-#user-input{
-  padding-top: 50px;
-  padding-bottom: 25px;
-}
 
 #main .mainText{
-  padding-top: 300px;
-  padding-bottom: 100px;
+  padding-top: 100px;
+  padding-bottom: 50px;
 }
 
 #main .mainText .mainSubheading{
@@ -50,6 +63,23 @@
   line-height: 50px;
 }
 
+/*
+* User Input Text
+*/
+
+#user-input{
+  padding-top: 50px;
+  padding-bottom: 25px;
+}
+
+#travelmode{
+  width: 200px;
+}
+
+#travel-mode-label{
+  padding-right: 5px;
+}
+
 .input-group{
   padding: 0px 5px 0px 5px;
 }
@@ -58,14 +88,64 @@
   text-align: center;
 }
 
+
+/*
+* Map Canvas and Directions/Results
+*/
+
 #map-canvas {
-  height: 500px;
-  margin: 0px;
-  padding: 0px
+  height: 390px;
 }
 
 #map-directions {
-  height: 300px
-  overflow: auto;
+  height: 390px;
 }
+
+#map-directions2{
+  margin-bottom: 50px;
+}
+
+/*
+* Footer
+*/
+
+.footer {
+  padding: 22px 60px 20px;
+  background-color: #0EB5E2;
+  clear: both;
+  overflow: hidden;
+  font-family: 'Cabin', Georgia, Times, serif;
+}
+
+.footer .footer-text{
+  text-align: left;
+  color: white;
+}
+
+.footer .footer-text p{
+  text-align: left;
+  color: white;
+  float:left;
+}
+
+.footer .footer-text ul{
+  float: right;
+  list-style: none;
+  overflow:hidden;
+}
+
+.footer .footer-text ul li{
+  margin: 0 0 0 50px;
+  float:left;
+}
+
+.footer .footer-text ul li a{
+  color: white;
+}
+
+.footer .footer-text ul li a:hover{
+  color: black;
+}
+
+
 
