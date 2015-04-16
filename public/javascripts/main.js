@@ -5,23 +5,24 @@
  * Google Maps Map Initialization
  */
 
- var directionsDisplay1, directionsDisplay2;
+ // leg1 directions display (origin to donut shop)
+ var directionsDisplay1 = new google.maps.DirectionsRenderer({
+ 		map             : map,
+ 		preserveViewport: true,
+ 		polylineOptions : {strokeColor:
+ 			'red'}});
+
+// leg2 directions display (donut shop to destination)
+var directionsDisplay2 = new google.maps.DirectionsRenderer({
+ 		map             : map,
+ 		preserveViewport: true,
+ 		polylineOptions : {strokeColor:
+ 			'blue'}});
+
  var directionsService = new google.maps.DirectionsService();
  var map;
 
  function initialize() {
- 	// leg1 directions display (origin to donut shop)
- 	directionsDisplay1 = new google.maps.DirectionsRenderer({
-                                          map             : map,
-                                          preserveViewport: true,
-                                          polylineOptions : {strokeColor:
-                                                              'red'}});
- 	// leg2 directions display (donut shop to destination)
- 	directionsDisplay2 = new google.maps.DirectionsRenderer({
-                                          map             : map,
-                                          preserveViewport: true,
-                                          polylineOptions : {strokeColor:
-                                                              'blue'}});
 
  	// default starting map (San Francisco)
  	var sf = new google.maps.LatLng(37.775, -122.419);
@@ -41,11 +42,11 @@
  }
 
  // Handle "enter" submit for user destination search
-$("#user_destination").keyup(function(event){
-    if(event.keyCode == 13){
-        $("#destination_button").click();
-    }
-});
+ $("#user_destination").keyup(function(event){
+ 	if(event.keyCode == 13){
+ 		$("#destination_button").click();
+ 	}
+ });
 
 /*
  * Google Maps Location
@@ -84,6 +85,10 @@ function calcRoute() {
 	var end = $('#user_destination').val();
 	var selectedMode = $('#travelmode').val();
 
+	// show map section
+	$('#map').show();
+	initialize();
+
 	// show loading icon
 	$('#loading-indicator2').show();
 
@@ -106,7 +111,6 @@ function calcRoute() {
 
 		// search nearby the end destination for nearest donuts (which assumes they'll also have coffee)
 		service.nearbySearch(coffeeDonutRequest, function callback(results, status) {
-			console.log(results);
 			//display nearest donut shop location found
 			$('#donut_heading').show();
 			var rating = results[0].rating;
@@ -116,15 +120,15 @@ function calcRoute() {
 			}
 
 			$('#donut_location').append("<h3>" + results[0].name + "</h3><h2><small>" + results[0].vicinity
-			 + " | Rating: " + rating + "</small></h2>");
+				+ " | Rating: " + rating + "</small></h2>");
 
 			// hide loading icon
 			$('#loading-indicator2').hide();
 
 			// scroll to directions and results
 			$("html, body").animate({
-                    scrollTop: $('#map').offset().top 
-                }, 2000);
+				scrollTop: $('#map').offset().top 
+			}, 2000);
 
 			// leg1 directions (origin to donut shop)
 			var leg1 = {
@@ -135,8 +139,8 @@ function calcRoute() {
 
 			directionsService.route(leg1, function(response, status) {
 				if (status == google.maps.DirectionsStatus.OK) {
-					console.log(response);
 					map.setZoom(13);
+					// set end address to display the name of the donut shop found
 					response.routes[0].legs[0].end_address = results[0].name + ", " + results[0].vicinity;
 					directionsDisplay1.setDirections(response);
 				}
@@ -151,14 +155,14 @@ function calcRoute() {
 
 			directionsService.route(leg2, function(response, status) {
 				if (status == google.maps.DirectionsStatus.OK) {
-					console.log(response);
 					map.setZoom(13);
+					// set start address to display the name of the donut shop found
 					response.routes[0].legs[0].start_address = results[0].name + ", " + results[0].vicinity;
 					directionsDisplay2.setDirections(response);
 				}
 			});
 		});
-	});
+});
 
 }
 
@@ -169,18 +173,15 @@ function codeAddress(endAddress, callback) {
 	var geocoder = new google.maps.Geocoder();
 	geocoder.geocode( { 'address': endAddress}, function(results, status) {
 		if (status == google.maps.GeocoderStatus.OK) {
-			console.log(results);
 			var currentlatlng = results[0].geometry.location;
 			var lng = currentlatlng.lng();
 			var lat = currentlatlng.lat();
 			var here = new google.maps.LatLng(lat, lng);
 			callback(here);
 		} else {
-			alert('Geocode was not successful for the following reason: ' + status);
+			alert('Geocode was not successful for the following reason: ' + status + " Please try again!");
 			callback(null);
 			$('#loading-indicator2').hide();
 		}
 	});
 }
-
-google.maps.event.addDomListener(window, 'load', initialize);
